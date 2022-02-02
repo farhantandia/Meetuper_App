@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meetuper_app/blocs/bloc_provider.dart';
+import 'package:meetuper_app/blocs/counter_bloc.dart';
 import 'package:meetuper_app/other/counter_home_screen.dart';
 import 'package:meetuper_app/screens/login_screen.dart';
 import 'package:meetuper_app/screens/meetup_detail_screen.dart';
@@ -8,10 +10,11 @@ import 'package:meetuper_app/other/app_state.dart';
 import 'package:meetuper_app/screens/register_screen.dart';
 import 'package:meetuper_app/screens/start_app_screen.dart';
 
+import 'blocs/meetup_bloc.dart';
 import 'models/arguments.dart';
 
 void main() {
-  runApp(MeetuperApp());
+  runApp(const MeetuperApp());
 }
 
 class MeetuperApp extends StatelessWidget {
@@ -24,12 +27,20 @@ class MeetuperApp extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(primarySwatch: Colors.teal,
           primaryColor: Colors.teal,),
-        home: CounterHomeScreen(title: appTitle),
+        // home: BlocProvider<CounterBloc>(
+        //   bloc: CounterBloc(),
+        //   child: CounterHomeScreen(title: appTitle,),
+    // ),
+        home: StartScreen(),
+
         routes: {
           LoginScreen.route: (context) =>LoginScreen(),
           RegisterScreen.route: (context) =>RegisterScreen(),
           StartScreen.route: (context) => StartScreen(),
-          MeetupHomeScreen.route: (context) => MeetupHomeScreen()
+          MeetupHomeScreen.route: (context) =>BlocProvider<MeetupBloc>(
+            bloc: MeetupBloc(),
+            child: MeetupHomeScreen(),
+          ),
         },
         onGenerateRoute: (RouteSettings settings) {
           if (settings.name == MeetupDetailScreen.route) {
@@ -37,7 +48,10 @@ class MeetuperApp extends StatelessWidget {
 
             return
               MaterialPageRoute(
-                builder: (context) => MeetupDetailScreen(meetupId: arguments.id)
+                builder: (context) => BlocProvider<MeetupBloc>(
+                    bloc: MeetupBloc(),
+                    child: MeetupDetailScreen(meetupId: arguments.id)
+                )
             );
           }
         }

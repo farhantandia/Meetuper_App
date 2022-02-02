@@ -1,3 +1,4 @@
+import 'package:meetuper_app/blocs/bloc_provider.dart';
 import 'package:meetuper_app/blocs/counter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meetuper_app/widgets/bottom_navigation_bar.dart';
@@ -13,13 +14,16 @@ class CounterHomeScreen extends StatefulWidget {
 }
 
 class CounterHomeScreenState extends State<CounterHomeScreen> {
-
-  dispose(){
-    counterBloc.dispose();
+  CounterBloc? counterBloc;
+  didChangeDependencies() {
+    super.didChangeDependencies();
+    counterBloc = BlocProvider.of(context);
   }
-  int _counter = 0;
+
+
   _increment() {
-    counterBloc.increment(15);
+    counterBloc?.increment(15);
+    // widget.bloc.increment(20);
   }
 
   @override
@@ -40,7 +44,7 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
                 style: TextStyle(fontSize: 16),textAlign: TextAlign.center,
               ),
               StreamBuilder(
-                stream: counterBloc.counterController.stream,
+                stream: counterBloc?.counterStream,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot){
                   if (snapshot.data != null){
                     return Text(
@@ -59,7 +63,7 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
               ),
               ElevatedButton(
                   child: StreamBuilder(
-                    stream: counterBloc.counterController.stream,
+                    stream: counterBloc?.counterStream,
                     builder:  (BuildContext context, AsyncSnapshot<int> snapshot) {
                       if (snapshot.hasData) {
                         return Text('Counter - ${snapshot.data}');
@@ -68,7 +72,8 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
                       }
                     },
                   ),
-                  onPressed: () => Navigator.pushNamed(context, '/meetupDetail'))
+                  onPressed: () =>
+                  {})
             ],
           ),
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meetuper_app/blocs/bloc_provider.dart';
+import 'package:meetuper_app/blocs/meetup_bloc.dart';
 import 'package:meetuper_app/models/meetup.dart';
 import 'package:meetuper_app/services/auth_api_service.dart';
 import 'package:meetuper_app/services/meetup_api_service.dart';
@@ -12,36 +14,37 @@ class MeetupDetailArguments {
 }
 
 class MeetupHomeScreen extends StatefulWidget {
-  final MeetupApiService _api = MeetupApiService();
-  static final route = '/homescreen';
+  static const route = '/homescreen';
+
+  MeetupHomeScreen({Key? key}) : super(key: key);
   MeetupHomeScreenState createState() => MeetupHomeScreenState();
 }
 
 class MeetupHomeScreenState extends State<MeetupHomeScreen> {
   List<Meetup> meetups = [];
 
+
   @override
-  initState() {
-    super.initState();
-    _fetchMeetups();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    BlocProvider.of<MeetupBloc>(context)?.fetchMeetups();
+    // final meetupBloc = BlocProvider.of<MeetupBloc>(context);
+    // meetupBloc.fetchMeetups();
+    // meetupBloc.meetups.listen((data) => print(data));
   }
 
-  _fetchMeetups() async {
-    final meetups = await widget._api.fetchMeetups();
-    setState(() => this.meetups = meetups);
-  }
 
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           _MeetupTitle(),
-          _MeetupList(meetups: meetups)
+          _MeetupList()
         ],
       ),
-      appBar: AppBar(title: Text('Home')),
+      appBar: AppBar(title: const Text('Home')),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {},
       ),
     );
@@ -69,7 +72,7 @@ class _MeetupTitle extends StatelessWidget {
                     width: 0,
                   ),
                   Text(' Welcome ${user?.name} !'),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onTap: () {
                       auth.logout()
@@ -135,7 +138,7 @@ class _MeetupCard extends StatelessWidget {
             child: ButtonBar(
           children: <Widget>[
             TextButton(
-                child: Text('Visit Meetup'),
+                child: const Text('Visit Meetup'),
                 onPressed: () {
                   Navigator.pushNamed(context, MeetupDetailScreen.route,
                       arguments: MeetupDetailArguments(id: meetup.id));
@@ -149,20 +152,28 @@ class _MeetupCard extends StatelessWidget {
 }
 
 class _MeetupList extends StatelessWidget {
-  final List<Meetup> meetups;
-
-  _MeetupList({required this.meetups});
 
   Widget build(BuildContext context) {
     return Expanded(
-        child: ListView.builder(
-      itemCount: meetups.length * 2,
-      itemBuilder: (BuildContext context, int i) {
-        if (i.isOdd) return Divider();
-        final index = i ~/ 2;
+        child: StreamBuilder<List<Meetup>>(
+          stream: BlocProvider.of<MeetupBloc>(context)?.meetups,
+          initialData: [],
+          builder: (BuildContext context, AsyncSnapshot<List<Meetup>> snaphot){
+            var meetups =snaphot.data;
+            if (meetups != null) {
+              return ListView.builder(
+                itemCount: meetups.length * 2,
+                itemBuilder: (BuildContext context, int i) {
+                  if (i.isOdd) return Divider();
+                  final index = i ~/ 2;
 
-        return _MeetupCard(meetup: meetups[index]);
-      },
-    ));
+                  return _MeetupCard(meetup: meetups[index]);
+                },
+              );
+            }
+            return Text("");
+          },
+        )
+        );
   }
 }
