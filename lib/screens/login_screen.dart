@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meetuper_app/blocs/auth_bloc/auth_bloc.dart';
+import 'package:meetuper_app/blocs/bloc_provider.dart';
 import 'package:meetuper_app/models/forms.dart';
 import 'package:meetuper_app/screens/meetup_home_screen.dart';
 import 'package:meetuper_app/screens/register_screen.dart';
@@ -10,8 +12,8 @@ import 'package:meetuper_app/utils/jwt.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String route = '/login';
-  final authApi = AuthApiService();
 
+  final AuthApiService authApi = AuthApiService();
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -24,15 +26,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormFieldState<String>> _emailKey =
       GlobalKey<FormFieldState<String>>();
 
+
   LoginFormData _loginData = LoginFormData();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  AuthBloc? _authBloc;
   @override
   initState() {
+    _authBloc = BlocProvider.of<AuthBloc>(context);
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _checkForMessage());
     super.initState();
-
   }
 
   bool _isObscure = true;
@@ -45,10 +50,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _login() {
+
+    _authBloc?.dispatch(InitLogging());
     widget.authApi.login(_loginData).then((value) {
-      Navigator.pushNamed(context, MeetupHomeScreen.route);
-      // print(value);
+      print(_authBloc);
+      _authBloc?.dispatch(LoggedIn());
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.pushReplacementNamed(context, MeetupHomeScreen.route);
     }).catchError((error) {
+      _authBloc?.dispatch(LoggedOut());
       print(error['errors']['message']);
       snackbar(error['errors']['message'], context,500);
     });
@@ -78,29 +89,45 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, StartScreen.route),
-                  alignment: Alignment.centerLeft,
-                  icon: Icon(Icons.close),
-                ),
+                // IconButton(
+                //   onPressed: () =>
+                //       Navigator.pushNamed(context, StartScreen.route),
+                //   alignment: Alignment.centerLeft,
+                //   icon: Icon(Icons.close),
+                // ),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 28.0, right: 28, top: 28),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Center(
-                        child: Text(
-                          'Log In',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 24),
-                        ),
-                      ),
+                  Text('Welcome to',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+
+                        color: Colors.black38,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic
+                    ),
+                  ),
+            Text('Meetuper',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.teal,
+                fontSize: 50,
+                fontFamily: 'Lobster',
+              ),
+            ),
                       SizedBox(
                         height: 90,
+                      ),
+                      Text(
+                        'Log In',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+
+                            color: Colors.black,
+                            fontSize: 20),
                       ),
                       TextFormField(
                         validator: (String? value) {
@@ -223,21 +250,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            RichText(
-                text: TextSpan(
-                    text: "Don't have an account",
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      TextSpan(
-                          text: ' Sign up ',
-                          style: TextStyle(
-                            color: Colors.teal,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () => Navigator.pushNamed(
-                                context, RegisterScreen.route)),
-                    ]))
+            Column(
+              children: [
+                RichText(
+                    text: TextSpan(
+                        text: "Don't have an account",
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                              text: ' Sign up ',
+                              style: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: new TapGestureRecognizer()
+                                ..onTap = () => Navigator.pushNamed(
+                                    context, RegisterScreen.route)),
+                        ])),
+                RichText(
+                    text: TextSpan(
+                        text: "Continue to Home Screen",
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                              text: ' as Guest ',
+                              style: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: new TapGestureRecognizer()
+                                ..onTap = () => Navigator.pushNamed(
+                                    context, MeetupHomeScreen.route)),
+                        ])),
+              ],
+            )
           ],
         ),
       ),

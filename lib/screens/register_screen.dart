@@ -33,12 +33,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _handleSuccess(data) {
 
     Future.delayed(Duration(seconds: 3),(){
-      snackbar('You have been successfully registered. Feel free to log in.', context, 2000);
+
+      snackbar('You have been successfully registered. Feel free to log in.', context, 6000);
       setState(() {
         Navigator.pushNamedAndRemoveUntil(
             context, '/login', (Route<
             dynamic> route) => false);
       });
+
     });
   }
 
@@ -90,7 +92,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   IconButton(
                     onPressed: () =>
-                        Navigator.pushNamed(context, StartScreen.route),
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', (Route<
+                            dynamic> route) => false),
                     alignment: Alignment.centerLeft,
                     icon: Icon(Icons.close),
                   ),
@@ -100,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
+                        const Text(
                           'Sign Up',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -108,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: Colors.black,
                               fontSize: 24),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         TextFormField(

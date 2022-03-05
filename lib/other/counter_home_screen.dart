@@ -20,7 +20,6 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
     counterBloc = BlocProvider.of(context);
   }
 
-
   _increment() {
     counterBloc?.increment(15);
     // widget.bloc.increment(20);
@@ -39,32 +38,26 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-
                 "Welcome to ${widget._appTitle}, let's increment numbers",
-                style: TextStyle(fontSize: 16),textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
               ),
               StreamBuilder(
                 stream: counterBloc?.counterStream,
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot){
-                  if (snapshot.data != null){
-                    return Text(
-                        'Counter: ${snapshot.data}',
-                        textDirection: TextDirection.ltr,
-                        style: TextStyle(fontSize: 30.0)
-                    );
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  if (snapshot.data != null) {
+                    return Text('Counter: ${snapshot.data}',
+                        textDirection: TextDirection.ltr, style: TextStyle(fontSize: 30.0));
                   } else {
-                    return Text(
-                        'Counter is sad :( No data',
-                        textDirection: TextDirection.ltr,
-                        style: TextStyle(fontSize: 30.0)
-                    );
+                    return Text('Counter is sad :( No data',
+                        textDirection: TextDirection.ltr, style: TextStyle(fontSize: 30.0));
                   }
                 },
               ),
               ElevatedButton(
                   child: StreamBuilder(
                     stream: counterBloc?.counterStream,
-                    builder:  (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                       if (snapshot.hasData) {
                         return Text('Counter - ${snapshot.data}');
                       } else {
@@ -72,8 +65,7 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
                       }
                     },
                   ),
-                  onPressed: () =>
-                  {})
+                  onPressed: () => {})
             ],
           ),
         ),
@@ -81,7 +73,11 @@ class CounterHomeScreenState extends State<CounterHomeScreen> {
           title: Text(widget._appTitle),
           centerTitle: true,
         ),
-        bottomNavigationBar: BottomNavigation());
+        bottomNavigationBar: BottomNavigation(
+          onChange: (int) {},
+          userState: null,
+          currentIndex: null,
+        ));
   }
 }
 

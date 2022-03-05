@@ -20,16 +20,14 @@ class _InheritedPost extends InheritedWidget {
   final List<Post> posts;
   final Function createPost;
 
-  _InheritedPost(
-      {required this.child, required this.posts, required this.createPost})
+  _InheritedPost({required this.child, required this.posts, required this.createPost})
       : super(child: child);
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
 
   static _InheritedPost of(BuildContext context) {
-    return (context.dependOnInheritedWidgetOfExactType<_InheritedPost>()
-        as _InheritedPost);
+    return (context.dependOnInheritedWidgetOfExactType<_InheritedPost>() as _InheritedPost);
   }
 }
 
@@ -48,13 +46,15 @@ class _PostList extends StatelessWidget {
                 color: Colors.blue[100],
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: ListTile(
-                  title: Text(posts[index].title),
-                  subtitle: Text(posts[index].body)),
+              child: ListTile(title: Text(posts[index].text), subtitle: Text(posts[index].body)),
             );
           },
         ),
-        bottomNavigationBar: BottomNavigation(),
+        bottomNavigationBar: BottomNavigation(
+          onChange: (int) {},
+          userState: null,
+          currentIndex: null,
+        ),
         floatingActionButton: _PostButton(),
         appBar: AppBar(title: Text(model.testingState)),
       );
@@ -67,8 +67,6 @@ class _PostButton extends StatelessWidget {
     // final createPost = _InheritedPost.of(context).createPost;
     final postModel = ScopedModel.of<PostModel>(context, rebuildOnChange: true);
     return FloatingActionButton(
-        onPressed: postModel.addPost,
-        tooltip: 'Add Post',
-        child: Icon(Icons.add));
+        onPressed: postModel.addPost, tooltip: 'Add Post', child: Icon(Icons.add));
   }
 }
