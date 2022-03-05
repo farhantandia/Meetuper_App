@@ -32,7 +32,7 @@ bool _canAccess() {
       currentIndex: currentIndex,
       onTap: (i) =>_handleTap(i,context),
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: ('Home')),
+        const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: ('Home')),
         BottomNavigationBarItem(
             icon: Icon(Icons.note, color: _renderColor()),
             label: 'Threads',

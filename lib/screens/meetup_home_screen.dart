@@ -6,9 +6,7 @@ import 'package:meetuper_app/blocs/meetup_bloc.dart';
 import 'package:meetuper_app/models/meetup.dart';
 import 'package:meetuper_app/screens/meetup_create_screen.dart';
 import 'package:meetuper_app/screens/register_screen.dart';
-import 'package:meetuper_app/screens/start_app_screen.dart';
 import 'package:meetuper_app/services/auth_api_service.dart';
-import 'package:meetuper_app/services/meetup_api_service.dart';
 import 'package:meetuper_app/screens/meetup_detail_screen.dart';
 
 import 'login_screen.dart';

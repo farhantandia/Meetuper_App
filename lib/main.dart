@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meetuper_app/blocs/bloc_provider.dart';
-import 'package:meetuper_app/blocs/counter_bloc.dart';
-import 'package:meetuper_app/other/counter_home_screen.dart';
 import 'package:meetuper_app/screens/login_screen.dart';
 import 'package:meetuper_app/screens/meetup_create_screen.dart';
 import 'package:meetuper_app/screens/meetup_detail_screen.dart';
 import 'package:meetuper_app/screens/meetup_home_screen.dart';
-import 'package:meetuper_app/other/post_screen.dart';
-import 'package:meetuper_app/other/app_state.dart';
 import 'package:meetuper_app/screens/register_screen.dart';
 import 'package:meetuper_app/screens/start_app_screen.dart';
 import 'package:meetuper_app/services/auth_api_service.dart';
@@ -15,7 +11,6 @@ import 'package:meetuper_app/services/auth_api_service.dart';
 import 'blocs/auth_bloc/auth_bloc.dart';
 import 'blocs/meetup_bloc.dart';
 import 'blocs/user_bloc/user_bloc.dart';
-import 'models/arguments.dart';
 
 void main() {
   runApp(App());

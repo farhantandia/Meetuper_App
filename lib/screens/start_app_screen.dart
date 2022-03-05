@@ -1,6 +1,5 @@
 import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
-import 'package:meetuper_app/screens/meetup_detail_screen.dart';
 import 'package:meetuper_app/screens/meetup_home_screen.dart';
 
 import 'login_screen.dart';

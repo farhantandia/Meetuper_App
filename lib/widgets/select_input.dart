@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 
-
-
 class SelectInput<T> extends StatefulWidget {
 
   final Function(T) onChange;
