@@ -11,4 +11,6 @@ personal project of intermediate level Flutter app which implement many cores of
 
 This app is called Meetuper, it is simply used to make, organize, and join some social events. I make this app as a baseline to make more interactive Flutter apps in the future.
 
+Demo :  https://youtu.be/lFGYCeBGfRg
+
 *This app need server to implement via simulator to perform authentication and save user data, in this case i used mongoDB.
